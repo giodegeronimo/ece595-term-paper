@@ -1,0 +1,23 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.pdf
+# Quarto artefacts
+presentation/slides.html
+presentation/slides_files/
+
+# OS cruft
+.DS_Store
+
+# Upstream template archive
+LaTeXAuthor_Guidelines_for_Proceedings.zip
+

@@ -1,0 +1,46 @@
+\section{Background}
+\label{sec:background}
+
+% 2.1 Generative Modeling via Transport and Diffusion
+%    (1–2 paragraphs)
+% 2.2 Transformer Architectures for Vision
+%    (1–2 paragraphs)
+% 2.3 Temporal Modeling for Video Understanding
+%    (1–2 paragraphs)
+% 2.4 Image Segmentation and Mask-Based Query Representations
+
+%-------------------------------------------------------------------------
+\subsection{Generative Modeling via Transport and Diffusion}
+
+Define diffusion models as stochastic processes that gradually transform noise → data.
+Introduce probability-flow ODEs as deterministic counterparts.
+Explain the idea of straightening probability paths.
+Prepares the reader for why Rectified Flow matters.
+
+%-------------------------------------------------------------------------
+\subsection{Transformer Architectures for Vision}
+Brief K/Q/V attention refresher.
+Why ViTs treat images as token grids.
+How patch representations differ from convolutional inductive biases.
+Enables understanding of NaViT and Mask2Former.
+
+%-------------------------------------------------------------------------
+\subsection{Temporal Modeling for Video Understanding}
+
+Define the task: assigning an action label per video frame.
+Contrast:
+frame-based classification (weak for long-range structure)
+temporal models (RNNs, TCNs, cross-attention token models—used in FACT)
+Prepares reader for why FACT uses learned action tokens.
+
+%-------------------------------------------------------------------------
+\subsection{Image Segmentation and Mask-Based Query Representations}
+
+Define semantic vs instance vs panoptic segmentation (one sentence each).
+Introduce idea of query-based segmentation:
+DETR = object queries predict bounding boxes.
+Mask2Former generalizes this to mask queries → predict segmentation masks.
+Introduce masked attention, not mathematically, just conceptually:
+Attention is computed over image tokens masked to the region of interest.
+This is why the architecture is universal across segmentation tasks.
+This gives the reader just enough to understand why Mask2Former is a unified model.

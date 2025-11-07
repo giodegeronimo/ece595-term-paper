@@ -1,0 +1,8 @@
+---
+title: "ECE 595 Presentation"
+author: "Giovanni De Geronimo"
+format: revealjs
+---
+## Motivation
+- Rectified Flow straightens diffusion trajectories
+- FACT improves temporal modeling efficiency

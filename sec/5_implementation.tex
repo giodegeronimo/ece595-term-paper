@@ -1,0 +1,32 @@
+\section{Implementation of Rectified Flow}
+\label{sec:implementation}
+
+% No text before 5.1. This section describes your work.
+
+%-------------------------------------------------------------------------
+\subsection{Model Objective and Training Procedure}
+
+State the velocity field learning objective exactly.
+Explain how training pairs $$(x_t, t)$$ are generated.
+Describe loss formulation and sampling discretization.
+
+%-------------------------------------------------------------------------
+\subsection{Architecture and Dataset}
+
+Describe the model architecture (e.g., small U-Net or ViT backbone).
+Describe the dataset used (e.g., CIFAR-10, MNIST).
+Justify dataset choice based on feasibility and experimental clarity.
+
+%-------------------------------------------------------------------------
+\subsection{Sampling Procedure}
+
+Describe the deterministic ODE sampling path.
+Specify number of integration steps and solver choice.
+Explain how this differs from DDPM ancestral sampling.
+
+%-------------------------------------------------------------------------
+\subsection{Training Details and Compute Environment}
+
+List hyperparameters (batch size, learning rate, optimizer).
+Describe compute resources (GPU model, training time).
+Mention any practical implementation considerations encountered.
