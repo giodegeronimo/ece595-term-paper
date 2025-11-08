@@ -22,11 +22,7 @@ State reported improvements in efficiency and accuracy.
 %-------------------------------------------------------------------------
 \subsection{NaViT (Dehghani et al., 2023)}
 
-Describe the challenge of handling arbitrary resolutions/aspect ratios.
-Summarize patch packing and variable-length sequence handling.
-Explain computational and generalization advantages.
-State reported improvements vs. resizing baselines.
-
+The long-standing practice in computer vision has been to pad or resize every image to a fixed shape before feeding it into a model, which either wastes compute (padding) or throws away useful spatial cues (resizing). NaViT \cite{dehghani2023navit} instead makes ViTs resolution-agnostic by packing variable-resolution images into shared sequences. A greedy algorithm fills each sequence until a token budget is reached, unused slots (pad tokens) are minimal ($<2\%$ of tokens), and attention masks ensure each image's tokens only see one another. Factorized positional embeddings encode height and width separately so the model understands aspect ratios, and variable token dropping lets larger images shed more patches during pretraining to balance compute. Coupled with random resolution sampling, this recipe delivers better accuracy than a vanilla ViT at comparable compute while training up to 4x faster, showing that native-resolution training can be both efficient and effective. The authors summarize their findings as: (i) random resolution sampling slashes training cost, (ii) NaViT achieves strong accuracy over a broad resolution range so inference cost can be dialed post hoc, and (iii) fixed batch shapes from packing enable new knobs such as aspect-ratio-preserving sampling, variable token dropping, and adaptive computation.
 %-------------------------------------------------------------------------
 \subsection{Mask2Former (Cheng et al., 2022)}
 

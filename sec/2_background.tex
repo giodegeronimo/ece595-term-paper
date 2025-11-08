@@ -19,11 +19,13 @@ Prepares the reader for why Rectified Flow matters.
 
 %-------------------------------------------------------------------------
 \subsection{Transformer Architectures for Vision}
-Brief K/Q/V attention refresher.
-Why ViTs treat images as token grids.
-How patch representations differ from convolutional inductive biases.
-Enables understanding of NaViT and Mask2Former.
+The transformer architecture, introduced in \cite{vaswani2017attention}, has become ubiquitous accross various domains in machine learning. This is a sequence-to-sequence architecture that uses only attention:
+\[
+\text{Attention}(Q, K, V) = \mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right)V
+\]
+Given that the attention mechanism is perumtation invaraint, positonal embeddings are added to the token embeddings to encode relative and absolute position in the sequence. Transformers have revolutionized language models by allowing all tokens in a sequence to attend to each other. \cite{dosovitskiy2021vit} applied this architecture to images by treating patches as words, showing that this revolutionary design was not limited to only natural language processing tasks. Compared to standard convolutional inductive biases, ViTs do not assume locality or translation invariance. Instead, they learns all structure from data, including which regions interact.
 
+Within the field of computer vision, it has been a long-standing standard practice to pad or resize images to a fixed shape before before inputting them into a model. This is largely motivated by the efficiency gains of batched computations as well as the fixed input/output shapes that standard CNNs follow. ViTs inherit this constraint: increasing resolution explodes the token count quadratically, and padding wastes both memory and FLOPs. Yet many tasks actually benefit from preserving native resolution (fine-grained cues, elongated aspect ratios, and the ability to pick cost-quality trade-offs), so trimming or padding every image can degrade accuracy. NaViT \cite{dehghani2023navit} challenges this resizing/padding convention by borrowing a concept called sequence packing from LLM training, where multiple examples can be packed into a sequence with attention masking to efficiently use compute in batched computations when sequences vary in length. They greedily pack variable-resolution images into shared sequences, apply per-image attention masks so tokens only see siblings from the same image, and use factorized positional embeddings to encode height and width separately. This keeps training efficient while still exposing the model to diverse aspect ratios.
 %-------------------------------------------------------------------------
 \subsection{Temporal Modeling for Video Understanding}
 
