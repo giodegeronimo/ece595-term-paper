@@ -10,14 +10,14 @@ format:
 <style>
 .small-text { font-size: 0.8em; }
 </style>
-## Motivation
-- Rectified Flow straightens diffusion trajectories
-- FACT improves temporal modeling efficiency
 
 ## Agenda
 - Motivation and goal
-- Four paper snapshots: Mask2Former, NaViT, FACT, Rectified Flow
+- Three paper snapshots: Mask2Former, NaViT, Rectified Flow
 - Comparative analysis and implementation outlook
+
+## Motivation
+- IDK what to put here.
 
 ## Mask2Former
 :::{.columns}
@@ -43,11 +43,6 @@ format:
 :::
 
 ![NaViT dataflow](../figures/NaViT_flow.png){width=70%}
-
-
-## FACT Placeholder
-- Key idea: frame tokens interacting with learned action tokens via cross-attention
-- Dataflow placeholder: frame embeddings → cross-attention → per-frame labels
 
 ## Rectified Flow Placeholder
 - Key idea: straightening probability paths for faster sampling

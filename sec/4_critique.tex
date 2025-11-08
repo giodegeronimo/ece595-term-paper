@@ -6,9 +6,10 @@
 %-------------------------------------------------------------------------
 \subsection{Problem Motivation and Scope}
 
-Assess how clearly each paper justifies its target problem.
-Compare generality vs. specificity of problem framing.
-Evaluate which motivations are strongest and why.
+% Assess how clearly each paper justifies its target problem.
+% Compare generality vs. specificity of problem framing.
+% Evaluate which motivations are strongest and why.
+FACT \cite{lu2024fact} does a great job at explaining the goal of action segmentation. They clearly motivate bidirectional cross-attention by pointing to gaps in prior two-stage models. However, the description of those baselines is thin, as it never really spells out what the action stage predicts or how the fusion works, so readers have to connect a few dots themselves. They also present FACT as distinct from frame-based and two-stage methods, but it still falls into the two-stage category. On the scope side, FACT generalizes nicely to the task because it trains on standard datasets without any special preprocessing. Two motivations stand out to me as particularly strong: (1) repeatedly updating frame and action features with each other makes sense since both depend heavily on the other, and (2) the multi-term loss (frame, action, cross-attention, smoothing) shows they paid attention to how intermediate representations shape the final output. Together those points keep the problem framing grounded even if the baseline explanation could be sharper.
 
 %-------------------------------------------------------------------------
 \subsection{Novelty and Conceptual Contributions}

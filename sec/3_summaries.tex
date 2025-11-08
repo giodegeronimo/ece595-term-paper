@@ -14,11 +14,9 @@ State reported improvements in sample quality and sampling speed.
 %-------------------------------------------------------------------------
 \subsection{FACT (Lu and Elhamifar, 2024)}
 
-Describe the frame-wise action segmentation task.
-Summarize the Frame-Action Cross Attention mechanism.
-Explain learned action tokens and temporal modeling rationale.
-State reported improvements in efficiency and accuracy.
+In the task of action segmentation, FACT \cite{lu2024fact} builds upon the two-stage approach by parallelizing the stages and introducing bilateral cross-attention between the branches. These branches are the action branch and the frame branch. The authors claim that the communication between the branches allows them to use less expensive convolutions for the frame branch rather than transformers, as the important temporal relations can be captured in the transformer-based action branch. This reduces computational costs, as there are always fewer action tokens than image frames. In the first block of the model, frame features are extracted using the frame branch. In the action branch $M$ learnable action tokens are input into a transformer with cross-attention where the action tokens are queries and the frame features are keys and values. Then, the model contains $B$ update blocks. In each block, action tokens get updated via cross-attention with frame features and are then followed by a self-attention layer. Frame features subsequently get updated via cross-attention with action tokens, followed by another convolution. These update blocks repeat, MLPs are applied to each branch, and their per-frame predictions are averaged at the end. FACT trains with four losses: frame and action cross-entropy terms applied at every block, a cross-attention consistency loss that encourages matching frame/action pairs, and a smoothing loss to stabilize action boundaries. Using this pipeline, FACT outperforms prior work in frame accuracy and segmental F1 across the four standard action segmentation datasets.
 
+It is worth noting that in the architecture described above, action tokens map one-to-one with frame segments even if the action is the same. The authors explore a one-to-many approach to reduce the amount of action tokens and thus self-attention overhead, but only apply it to one dataset. Furthermore, they explore the idea of using transcripts from videos to initialize action tokens, finding that this increases performance. For the purpose of this paper, I will only focus on the one-to-one variation of FACT without using transcripts. 
 %-------------------------------------------------------------------------
 \subsection{NaViT (Dehghani et al., 2023)}
 
