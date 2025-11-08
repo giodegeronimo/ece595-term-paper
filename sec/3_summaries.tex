@@ -30,7 +30,4 @@ State reported improvements vs. resizing baselines.
 %-------------------------------------------------------------------------
 \subsection{Mask2Former (Cheng et al., 2022)}
 
-Define universal segmentation setting (semantic/instance/panoptic).
-Summarize mask-query-based segmentation architecture.
-Explain masked attention over image tokens.
-State reported improvements in segmentation benchmarks.
+Mask2Former \cite{cheng2022mask2former} shows that semantic, instance, and panoptic segmentation can all be framed as predicting $N$ binary masks with $N$ labels, so it learns a single architecture that does exactly that. Images pass through a CNN backbone and pixel decoder to produce multi-scale features, and a pool of learned mask queries runs through transformer decoder layers that see progressively higher-resolution image features. Each query outputs a class logit and a mask logit via a dot-product with the full-resolution features, so the same query embedding decides “what” and “where.” Masked attention keeps each query focused on its current region, while the multi-scale ladder helps recover tiny structures. The authors also sub-sample pixels when computing mask loss, which cuts memory overhead without hurting accuracy. Across COCO panoptic, ADE20K semantic, and Cityscapes instance benchmarks, this universal design matches or beats task-specific models, giving a single set of weights that works everywhere.

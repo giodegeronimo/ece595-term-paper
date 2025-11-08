@@ -11,6 +11,7 @@
 *.fls
 *.fdb_latexmk
 *.pdf
+*.brf
 # Quarto artefacts
 presentation/slides.html
 presentation/slides_files/

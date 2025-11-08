@@ -1,8 +1,49 @@
 ---
 title: "ECE 595 Presentation"
 author: "Giovanni De Geronimo"
-format: revealjs
+format: 
+    revealjs:
+        margin: 0.04
+        theme: simple
+        highlight-style: github
 ---
+<style>
+.small-text { font-size: 0.8em; }
+</style>
 ## Motivation
 - Rectified Flow straightens diffusion trajectories
 - FACT improves temporal modeling efficiency
+
+## Agenda
+- Motivation and goal
+- Four paper snapshots: Mask2Former, NaViT, FACT, Rectified Flow
+- Comparative analysis and implementation outlook
+
+## Mask2Former
+:::{.columns}
+:::{.column width="65%"}
+::: {.small-text}
+- Key idea: universal mask queries for semantic/instance/panoptic tasks
+- Dataflow:
+  - Images passed through backbone to extract low level features
+  - Pixel decoder progressively upsamples the features back to the original image shape
+  - Learned queries --> transformer decoders w/ masked cross-attention (k/v from image features)
+  - Queries get dotted with full-resolution features to create masks and labels 
+:::
+:::
+:::{.column width="35%"}
+![Mask2Former dataflow](../figures/mask2former_flow.png){width=100%}
+:::
+:::
+
+## NaViT Placeholder
+- Key idea: packed variable-resolution ViTs with masked attention scope
+- Dataflow placeholder: mixed-resolution images → packing → transformer encoder
+
+## FACT Placeholder
+- Key idea: frame tokens interacting with learned action tokens via cross-attention
+- Dataflow placeholder: frame embeddings → cross-attention → per-frame labels
+
+## Rectified Flow Placeholder
+- Key idea: straightening probability paths for faster sampling
+- Dataflow placeholder: noise samples → velocity ODE → images
