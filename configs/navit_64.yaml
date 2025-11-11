@@ -1,0 +1,22 @@
+data:
+  root: /path/to/imagenet-subset
+  image_size: 64
+  limit: null
+
+train:
+  batch_size: 32
+  epochs: 50
+  lr: 0.0001
+  noise_std: 1.0
+  device: cuda
+  amp: true
+  log_interval: 25
+  sample_interval: 0
+  max_tokens_per_pack: 512
+
+model:
+  patch: 8
+  d_model: 256
+  depth: 8
+  n_head: 8
+  mlp_ratio: 4.0

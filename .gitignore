@@ -12,6 +12,7 @@
 *.fdb_latexmk
 *.pdf
 *.brf
+
 # Quarto artefacts
 presentation/slides.html
 presentation/slides_files/
@@ -22,4 +23,26 @@ presentation/slides_files/
 # Upstream template archive
 LaTeXAuthor_Guidelines_for_Proceedings.zip
 
-*__pycache__*
+# Python caches & build artefacts
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+env/
+.env
+*.egg-info/
+build/
+dist/
+.coverage*
+coverage.xml
+
+# Notebook checkpoints & experiment outputs
+.ipynb_checkpoints/
+outputs/
+
+# Large model files
+*.pth
+*.pt
+*.ckpt
+*.bin

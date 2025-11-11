@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "navit-rf"
+version = "0.1.0"
+description = "NaViT + Rectified Flow experiments"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Gio De Geronimo"}]
+dependencies = [
+    "torch>=2.1",
+    "torchvision>=0.16",
+    "PyYAML>=6.0",
+    "matplotlib>=3.8",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
