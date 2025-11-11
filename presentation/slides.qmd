@@ -9,20 +9,35 @@ format:
 ---
 <style>
 .small-text { font-size: 0.8em; }
+.smaller-text { font-size: 0.5em; }
+.caption { font-size: 0.5em; text-align: center; margin-top: 0.3em; color: #555; }
+.center-image { display: block; margin-left: auto; margin-right: auto; }
+.image-block { text-align: center; }
+.image-block img { display: inline-block; }
+.reveal section .columns {
+  display: flex !important;
+  gap: 1.5rem;
+}
+.reveal section .columns.vcenter {
+  align-items: center;
+}
 </style>
 
 ## Agenda
 - Motivation and goal
 - Three paper snapshots: Mask2Former, NaViT, Rectified Flow
-- Comparative analysis and implementation outlook
+- Non-Trivial Implementation
 
 ## Motivation
-- IDK what to put here.
+- Why these three papers?
+  - Mask2Former: unified segmentation via mask queries
+  - NaViT: packed ViTs for native-resolution training
+  - Rectified Flow: straight probability paths for fast image generation
 
-## Mask2Former
-:::{.columns}
-:::{.column width="65%"}
-::: {.small-text}
+## Mask2Former - What They Did
+:::{.columns .vcenter}
+:::{.column width="50%"}
+::: {.smaller-text}
 - Key idea: universal mask queries for semantic/instance/panoptic tasks
 - Dataflow:
   - Images passed through backbone to extract low level features
@@ -31,19 +46,70 @@ format:
   - Queries get dotted with full-resolution features to create masks and labels 
 :::
 :::
-:::{.column width="35%"}
-![Mask2Former dataflow](../figures/mask2former_flow.png){width=100%}
+:::{.column width="50%"}
+![](../figures/mask2former_flow.png){width=100% .center-image}
+<div class="caption">Mask2Former dataflow</div>
 :::
 :::
 
-## NaViT
+## Mask2Former Results & Impact
+::: {.small-text}
+- One unified model outperforms specialized models in segmentation tasks
+:::
+::: {.image-block}
+![](../figures/mask2former_comparisons.png){width=50% .center-image}
+<div class="caption">Mask2Former comparisons</div>
+:::
+::: {.small-text}
+- Got 3X memory savings by calculating mask loss on smaller random sample of pixels
+:::
+
+## NaViT – What They Did
+:::{.columns}
+:::{.column width="35%"}
 ::: {.small-text}
 - Key idea: packed variable-resolution ViTs with masked attention scope
 - Dataflow: greedy packing, per-image attention masks, factorized embeddings, token dropping
 :::
+:::
+:::{.column width="65%"}
+::: {.image-block}
+![](../figures/NaViT_flow.png){width=100%}
+<div class="caption">NaViT packing schematic</div>
+:::
+:::
+:::
 
-![NaViT dataflow](../figures/NaViT_flow.png){width=70%}
+## NaViT Results & Impact
+::: {.small-text}
+- Compute savings (TPU hours), accuracy across resolution range
+::: {.image-block}
+![](../figures/NaViT_plots.png){width=70%}
+<div class="caption">NaViT compute/accuracy plots</div>
+:::
+- Smooth cost/quality trade-off at inference
+- No need to lose information by resizing images
+:::
 
-## Rectified Flow Placeholder
+
+
+## Rectified Flow – What They Did
 - Key idea: straightening probability paths for faster sampling
-- Dataflow placeholder: noise samples → velocity ODE → images
+- Deterministic ODE sampling (few steps)
+- Placeholder: mention NaViT-encoder hybrid angle
+
+## Rectified Flow Results & Impact
+- Placeholder: reported 10–20× speedup with comparable FID
+- Deterministic sampling enables multi-aspect generation
+- Bridge to implementation
+
+## Implementation Overview – NaViT + Rectified Flow
+- Placeholder: architecture diagram (packed encoder → velocity head)
+- Dataset + teacher, packing strategy, current training status
+
+## Preliminary Results
+- Placeholder: insert sample grids (cats baseline, multi-resolution fine-tune)
+- Early metrics (FID estimate, sampling time) and remaining TODOs
+
+## Takeaways & Next Steps
+- Placeholder bullets: key lessons from papers, status of hybrid model, plan before Friday
