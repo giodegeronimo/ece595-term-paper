@@ -15,6 +15,7 @@ def sample_rectified_flow(
     noise_std: float = 1.0,
     solver: Literal["euler", "heun"] = "heun",
     shapes: Optional[Sequence[Tuple[int, int]]] = None,
+    return_shapes: bool = False,
 ):
     """
     Numerical integration of dx/dt = v(x,t) from t=0 -> 1 for rectified flows.
@@ -80,9 +81,20 @@ def sample_rectified_flow(
         else:
             raise ValueError(f"Unknown solver '{solver}'")
 
-    outputs: List[torch.Tensor] = []
+    samples: List[torch.Tensor] = []
     x = x.clamp(-1.0, 1.0)
+    max_h = 0
+    max_w = 0
+    for (h, w) in shapes:
+        max_h = max(max_h, h)
+        max_w = max(max_w, w)
+
+    batch = torch.zeros(n, 3, max_h, max_w, device=device)
     for i, (h, w) in enumerate(shapes):
-        sample = x[i, :, :h, :w]
-        outputs.append((sample + 1.0) * 0.5)
-    return outputs
+        sample = (x[i, :, :h, :w] + 1.0) * 0.5
+        batch[i, :, :h, :w] = sample
+        samples.append(sample)
+
+    if return_shapes:
+        return batch, list(shapes)
+    return batch
