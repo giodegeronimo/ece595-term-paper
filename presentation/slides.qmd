@@ -6,39 +6,30 @@ format:
         margin: 0.04
         theme: simple
         highlight-style: github
+        css: slides.css
 ---
-<style>
-.small-text { font-size: 0.8em; }
-.smaller-text { font-size: 0.5em; }
-.caption { font-size: 0.5em; text-align: center; margin-top: 0.3em; color: #555; }
-.center-image { display: block; margin-left: auto; margin-right: auto; }
-.image-block { text-align: center; }
-.image-block img { display: inline-block; }
-.reveal section .columns {
-  display: flex !important;
-  gap: 1.5rem;
-}
-.reveal section .columns.vcenter {
-  align-items: center;
-}
-</style>
-
 ## Agenda
 - Motivation and goal
-- Three paper snapshots: Mask2Former, NaViT, Rectified Flow
+- Three paper snapshots: 
+  - **Mask2Former**
+  - **NaViT**
+  - **Rectified Flow**
 - Non-Trivial Implementation
 
 ## Motivation
 - Why these three papers?
-  - Mask2Former: unified segmentation via mask queries
-  - NaViT: packed ViTs for native-resolution training
-  - Rectified Flow: straight probability paths for fast image generation
+<br></br>
+- **Mask2Former**: unified segmentation via mask queries
+- **NaViT**: packed ViTs for native-resolution training
+- **Rectified Flow**: straight probability paths for fast image generation
 
 ## Mask2Former - What They Did
 :::{.columns .vcenter}
 :::{.column width="50%"}
-::: {.smaller-text}
+::: {.smallish-text}
+<br></br>
 - Key idea: universal mask queries for semantic/instance/panoptic tasks
+<br></br>
 - Dataflow:
   - Images passed through backbone to extract low level features
   - Pixel decoder progressively upsamples the features back to the original image shape
@@ -81,35 +72,97 @@ format:
 :::
 
 ## NaViT Results & Impact
-::: {.small-text}
+:::{.small-text}
 - Compute savings (TPU hours), accuracy across resolution range
-::: {.image-block}
+:::
+:::{.image-block}
 ![](../figures/NaViT_plots.png){width=70%}
 <div class="caption">NaViT compute/accuracy plots</div>
 :::
-- Smooth cost/quality trade-off at inference
+:::{.small-text}
+- Smooth cost/acc trade-off at inference
 - No need to lose information by resizing images
 :::
 
 
-
 ## Rectified Flow – What They Did
+- Treat image generation as a neural ODE for transport between distributions
 - Key idea: straightening probability paths for faster sampling
-- Deterministic ODE sampling (few steps)
-- Placeholder: mention NaViT-encoder hybrid angle
+- Target:
+<div class="smallish-text">
+$$
+\min_{v} \int_{0}^{1} \mathbb{E}\!\left[
+  \left\| (X_{1} - X_{0}) - v(X_{t}, t) \right\|^{2}
+\right] \, dt,
+\quad\text{where } X_t = (1 - t)X_0 + tX_1
+$$
+</div>
+- Model learns a vector field to transport distributions
+
+## Rectified Flow – What They Did Cont.
+- This induces a rerouting of the flow to make the ODE well defined
+- Repeating this straightens the flow
+  ![](../figures/fsaf_flows.png){width=100%}
+<div class="caption">Rectified Flow Straightening</div>
+- Straight flow = faster generation
 
 ## Rectified Flow Results & Impact
-- Placeholder: reported 10–20× speedup with comparable FID
-- Deterministic sampling enables multi-aspect generation
-- Bridge to implementation
+::: {.smaller-text}
+- Significantly faster sampling: ODE integrates in few steps
+:::
+:::{.columns .vcenter}
+:::{.column width="40%"}
+::: {.image-block}
+![](../figures/fsaf_zplot.png){width=80%}
+<div class="caption">Straight vs. zig-zag paths</div>
+:::
+:::
+:::{.column width="60%"}
+::: {.image-block}
+![](../figures/fsaf_cats.png){width=90%}
+<div class="caption">Rectified Flow samples</div>
+:::
+:::
+:::
 
-## Implementation Overview – NaViT + Rectified Flow
-- Placeholder: architecture diagram (packed encoder → velocity head)
-- Dataset + teacher, packing strategy, current training status
+## Implementation Overview
+:::{.columns}
+:::{.column width="55%"}
+- Paper: Rectified Flow
+- Model Architecture: ViT
+  - Fourier Embeddings for t
+  - Factorized Positional Embeddings
+- Dataset: AFHQ Cats
+- Training: My laptop
+:::
+:::{.column width="45%"}
+::: {.image-block}
+![](../figures/cats_ds.png){width=65%}
+<div class="caption">Dataset Images</div>
+:::
+:::
+:::
 
 ## Preliminary Results
-- Placeholder: insert sample grids (cats baseline, multi-resolution fine-tune)
-- Early metrics (FID estimate, sampling time) and remaining TODOs
+::: {.image-block}
+![](../figures/0_vs_1rect_1.png){width=80%}
+![](../figures/0_vs_1rect_2.png){width=80%}
+<div class="caption">No Rectify vs 1 Rectify</div>
+:::
 
-## Takeaways & Next Steps
-- Placeholder bullets: key lessons from papers, status of hybrid model, plan before Friday
+## Bonus: Add NaViT
+::: {.image-block}
+![](../figures/NaViT_rf_samp1.png){width=23%}
+![](../figures/NaViT_rf_samp2.png){width=23%}
+<div class="caption">NaViT Generations</div>
+:::
+
+## Next Steps
+- Evaluate NaViT version vs no NaViT to see if we get those efficiency gains
+<br></br>
+- Train with more compute to get higher res images
+<br></br>
+- Play around with the fact that the flow can be reversed
+
+## Thank You
+- Questions?

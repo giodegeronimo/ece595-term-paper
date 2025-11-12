@@ -1,0 +1,14 @@
+.small-text { font-size: 0.8em; }
+.smallish-text { font-size: 0.67em; }
+.smaller-text { font-size: 0.5em; }
+.caption { font-size: 0.5em; text-align: center; margin-top: 0.3em; color: #555; }
+.center-image { display: block; margin-left: auto; margin-right: auto; }
+.image-block { text-align: center; }
+.image-block img { display: inline-block; }
+.reveal section .columns {
+  display: flex !important;
+  gap: 1.5rem;
+}
+.reveal section .columns.vcenter {
+  align-items: center;
+}
