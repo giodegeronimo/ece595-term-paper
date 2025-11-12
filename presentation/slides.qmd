@@ -86,11 +86,12 @@ format:
 
 
 ## Rectified Flow – What They Did
-- Treat image generation as a neural ODE for transport between distributions
+- Treat image generation as a neural ODE for transport between distributions: $\pi_0 \rightarrow \pi_1$
 - Key idea: straightening probability paths for faster sampling
 - Target:
 <div class="smallish-text">
 $$
+X_0\sim\pi_0, X_1\sim\pi_1\\
 \min_{v} \int_{0}^{1} \mathbb{E}\!\left[
   \left\| (X_{1} - X_{0}) - v(X_{t}, t) \right\|^{2}
 \right] \, dt,
