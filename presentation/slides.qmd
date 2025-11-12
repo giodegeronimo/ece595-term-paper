@@ -10,8 +10,8 @@ format:
 ---
 ## Agenda
 - Motivation and goal
-- Three paper snapshots: 
-  - **Mask2Former**
+- Two paper snapshots: 
+  - Mask2Former
   - **NaViT**
   - **Rectified Flow**
 - Non-Trivial Implementation
@@ -19,11 +19,11 @@ format:
 ## Motivation
 - Why these three papers?
 <br></br>
-- **Mask2Former**: unified segmentation via mask queries
+- Mask2Former: unified segmentation via mask queries
 - **NaViT**: packed ViTs for native-resolution training
 - **Rectified Flow**: straight probability paths for fast image generation
 
-## Mask2Former - What They Did
+<!-- ## Mask2Former - What They Did
 :::{.columns .vcenter}
 :::{.column width="50%"}
 ::: {.smallish-text}
@@ -33,7 +33,7 @@ format:
 - Dataflow:
   - Images passed through backbone to extract low level features
   - Pixel decoder progressively upsamples the features back to the original image shape
-  - Learned queries --> transformer decoders w/ masked cross-attention (k/v from image features)
+  - Learned queries -> transformer decoders w/ masked cross-attention (k/v from image features)
   - Queries get dotted with full-resolution features to create masks and labels 
 :::
 :::
@@ -53,7 +53,7 @@ format:
 :::
 ::: {.small-text}
 - Got 3X memory savings by calculating mask loss on smaller random sample of pixels
-:::
+::: -->
 
 ## NaViT – What They Did
 :::{.columns}
@@ -134,6 +134,7 @@ $$
   - Fourier Embeddings for t
   - Factorized Positional Embeddings
 - Dataset: AFHQ Cats
+  - 5558 images
 - Training: My laptop
 :::
 :::{.column width="45%"}
