@@ -6,10 +6,7 @@
 %-------------------------------------------------------------------------
 \subsection{Rectified Flow (Liu et al., 2023)}
 
-Describe the problem of inefficient sampling in diffusion models.
-Summarize the proposed rectified probability flow formulation.
-Explain the training setup and the deterministic ODE sampling procedure.
-State reported improvements in sample quality and sampling speed.
+Rectified Flow \cite{liu2023rectifiedflow} tackles the sampling inefficiency in diffusion-style models by forcing the learned transport ODE to follow straight lines between $x_0 \sim \pi_0$ and $x_1 \sim \pi_1$. The velocity field is trained with a simple least-squares loss on the straight interpolation $x_t = (1 - t)x_0 + t x_1$, so the model directly targets straight trajectories rather than the curved paths typical of probability-flow ODEs. They also propose a reflow step which involves regenerating $(x_0, x_1)$ pairs from the current flow and refitting the same objective to straighten the path again. This process is only applied a handful of times since additional passes can accumulate estimation error. On CIFAR-10 they report that the first rectified flow, solved with the adaptive RK45 Runge–Kutta integrator, achieves a Fréchet Inception Distance (FID) of 2.58 (lower indicates better image quality) and recall of 0.57 (higher indicates more diversity), matching the fully sampled VP/sub-VP SDE baselines that require thousands of denoising steps. After a second reflow they distill the model to a one-step generator and still obtain FID 4.85 with recall 0.50, showing that straight transport paths can bridge the gap between one-shot and continuous-time samplers without giving up competitiveness on quality or diversity.
 
 %-------------------------------------------------------------------------
 \subsection{FACT (Lu and Elhamifar, 2024)}

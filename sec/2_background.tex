@@ -12,12 +12,10 @@
 %-------------------------------------------------------------------------
 \subsection{Generative Modeling via Transport and Diffusion}
 
-Generative models are a hot topic today, with massive strides being made in image generation. In previous attempts to accomplish this, models were trained to directly generate images. However, more recent approaches treat the task as a domain transport problem (i.e. mapping a normal distribution to to the distribution of cat photos). This
+Much of the excitement around modern generative models comes from treating generation as a transport problem instead of a one-shot pixel prediction task. The idea is to map a simple distribution (e.g. Gaussian noise) into the data distribution (e.g. photos of cats) by learning how samples should move over time. Diffusion and score-based models do this by predicting a time-dependent direction at every point so that integrating a neural ODE gradually denoises the sample. The catch is that these trajectories are usually quite curved around the data manifold, so numerical solvers end up taking hundreds of tiny steps to stay accurate.
 
-Define diffusion models as stochastic processes that gradually transform noise → data.
-Introduce probability-flow ODEs as deterministic counterparts.
-Explain the idea of straightening probability paths.
-Prepares the reader for why Rectified Flow matters.
+If the path were nearly straight, fewer solver steps would be required. Probability-flow ODEs already provide a deterministic way to trace diffusion trajectories, but they still inherit the curved flows learned by the teacher model. Rectified Flow \cite{liu2023rectifiedflow} explicitly learns a ``rectified'' velocity field from a diffusion teacher so the transport path is as straight as possible, which in practice reduces sampling to tens of steps without sacrificing image quality.
+
 
 %-------------------------------------------------------------------------
 \subsection{Transformer Architectures for Vision}
