@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional
+import json
 
 import torch
 from torch import nn
@@ -49,6 +51,18 @@ class RectifiedFlowTrainer:
             model_state = state.get("model", state)
             self.model.load_state_dict(model_state)
 
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        default_log_root = self.data_root.parent / "logs"
+        self.log_dir = Path(cfg.train.log_dir) if cfg.train.log_dir else default_log_root / timestamp
+        self.log_dir.mkdir(parents=True, exist_ok=True)
+
+        def _json_default(obj):
+            if isinstance(obj, Path):
+                return str(obj)
+            raise TypeError(f"{obj!r} is not JSON serializable")
+
+        (self.log_dir / "config.json").write_text(json.dumps(asdict(self.cfg), indent=2, default=_json_default))
+
         self.reflow_mode = cfg.train.reflow_only
         checkpoint_dir = cfg.train.checkpoint_dir
         if checkpoint_dir is not None:
@@ -74,6 +88,7 @@ class RectifiedFlowTrainer:
                 collate_fn=collate,
             )
             self.reflow_path = None
+            self.loss_log = self.log_dir / "training_loss.csv"
         else:
             default_reflow = self.data_root.parent / f"{self.data_root.name}_reflow"
             reflow_root = Path(cfg.train.reflow_dir) if cfg.train.reflow_dir else default_reflow
@@ -86,6 +101,7 @@ class RectifiedFlowTrainer:
                 reflow_steps=cfg.train.reflow_steps,
                 reflow_dir=reflow_root,
                 tag=cfg.train.reflow_tag,
+                source_checkpoint=cfg.train.init_checkpoint,
             )
             collate = make_reflow_collate(cfg.model.patch)
             self.dataloader = DataLoader(
@@ -96,6 +112,10 @@ class RectifiedFlowTrainer:
                 collate_fn=collate,
             )
             self.reflow_path = data_file
+            self.loss_log = self.log_dir / "reflow_loss.csv"
+
+        if not self.loss_log.exists():
+            self.loss_log.write_text("epoch,loss\n")
 
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=cfg.train.lr)
         self.criterion = nn.MSELoss()
@@ -148,6 +168,10 @@ class RectifiedFlowTrainer:
             torch.save(state, self.best_path)
             print(f"[epoch {epoch}] updated best checkpoint -> {self.best_path}")
 
+    def _log_epoch_loss(self, epoch: int, epoch_loss: float):
+        with open(self.loss_log, "a", encoding="utf-8") as f:
+            f.write(f"{epoch},{epoch_loss:.6f}\n")
+
     def train(self):
         for epoch in range(self.cfg.train.epochs):
             running = 0.0
@@ -172,6 +196,7 @@ class RectifiedFlowTrainer:
             is_best = epoch_loss < self.best_loss
             if is_best:
                 self.best_loss = epoch_loss
+            self._log_epoch_loss(epoch + 1, epoch_loss)
             self._save_checkpoints(epoch + 1, epoch_loss, is_best)
 
     def save(self, path: str | Path):

@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
-from typing import List, Sequence, Tuple
+from typing import List, Sequence, Tuple, Optional
+import json
+from collections import Counter
 
 import torch
 
@@ -54,6 +56,7 @@ def build_or_load_reflow_dataset(
     reflow_steps: int,
     reflow_dir: Path,
     tag: str | None = None,
+    source_checkpoint: Optional[Path] = None,
 ) -> Tuple[ReflowPairDataset, Path]:
     base = reflow_dir
     base.mkdir(parents=True, exist_ok=True)
@@ -78,4 +81,14 @@ def build_or_load_reflow_dataset(
         "shapes": shapes,
     }
     torch.save(payload, data_file)
+    hist = Counter(f"{h}x{w}" for h, w in shapes)
+    meta = {
+        "generated_at": datetime.utcnow().isoformat(),
+        "pairs": len(shapes),
+        "reflow_steps": reflow_steps,
+        "noise_std": noise_std,
+        "source_checkpoint": str(source_checkpoint) if source_checkpoint else None,
+        "shape_histogram": dict(hist),
+    }
+    (run_dir / "metadata.json").write_text(json.dumps(meta, indent=2))
     return ReflowPairDataset(anchors, targets, shapes), data_file

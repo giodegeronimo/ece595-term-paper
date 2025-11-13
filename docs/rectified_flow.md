@@ -46,3 +46,5 @@ After an initial round of training on real data, you can fine-tune purely on syn
 4. Switch `TrainConfig.reflow_only=True` (or use the notebook template) to train exclusively on those cached pairs; the trainer now expects batches containing `x0`, `target`, `patch_hw`, and `orig_hw`.
 
 The helper `build_or_load_reflow_dataset` automates steps 1–3, while `make_reflow_collate` repads the pairs for the transformer. Checkpoints follow the “latest/best” convention so you can resume base or reflow training without juggling dozens of files.
+
+Each run also drops a `config.json` plus `training_loss.csv` / `reflow_loss.csv` into `logs/<timestamp>/`, making it easy to plot convergence curves or cite the exact hyper-parameters later.

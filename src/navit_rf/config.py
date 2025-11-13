@@ -23,6 +23,7 @@ class TrainConfig:
     sample_interval: int = 0
     max_tokens_per_pack: int = 512
     checkpoint_dir: Optional[Path] = None
+    log_dir: Optional[Path] = None
     init_checkpoint: Optional[Path] = None
     reflow_only: bool = False
     reflow_pairs: int = 0
