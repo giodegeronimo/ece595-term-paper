@@ -46,3 +46,7 @@ outputs/
 *.pt
 *.ckpt
 *.bin
+experiments/navit_rf/**/samples/
+experiments/navit_rf/**/samples/
+
+experiments/navit_rf/**/samples/
