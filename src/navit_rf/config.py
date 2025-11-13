@@ -22,6 +22,13 @@ class TrainConfig:
     log_interval: int = 50
     sample_interval: int = 0
     max_tokens_per_pack: int = 512
+    checkpoint_dir: Optional[Path] = None
+    init_checkpoint: Optional[Path] = None
+    reflow_only: bool = False
+    reflow_pairs: int = 0
+    reflow_steps: int = 50
+    reflow_dir: Optional[Path] = None
+    reflow_tag: Optional[str] = None
 
 
 @dataclass
@@ -38,4 +45,3 @@ class ExperimentConfig:
     data: DataConfig
     train: TrainConfig = field(default_factory=TrainConfig)
     model: ModelConfig = field(default_factory=ModelConfig)
-

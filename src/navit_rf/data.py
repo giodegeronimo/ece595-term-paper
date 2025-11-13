@@ -101,3 +101,30 @@ def random_resized_transform(
             _normalize_to_noise(noise_std),
         ]
     )
+
+
+class ReflowPairDataset(Dataset):
+    """
+    Dataset of synthetic (x0, target) pairs produced via reflow.
+    Anchors/targets are stored padded to a common size; shapes track the valid region.
+    """
+
+    def __init__(self, anchors: torch.Tensor, targets: torch.Tensor, shapes: Sequence[Tuple[int, int]]):
+        assert anchors.shape == targets.shape, "anchors/targets must share shape"
+        self.anchors = anchors
+        self.targets = targets
+        self.shapes = list(shapes)
+
+    def __len__(self) -> int:
+        return self.anchors.shape[0]
+
+    def __getitem__(self, idx: int):
+        h, w = self.shapes[idx]
+        x0 = self.anchors[idx, :, :h, :w]
+        target = self.targets[idx, :, :h, :w]
+        return {"x0": x0, "target": target, "shape": (h, w)}
+
+
+def load_reflow_dataset(path: Path) -> ReflowPairDataset:
+    data = torch.load(path)
+    return ReflowPairDataset(data["anchors"], data["targets"], data["shapes"])

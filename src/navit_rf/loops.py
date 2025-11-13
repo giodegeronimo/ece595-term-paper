@@ -1,6 +1,6 @@
 import torch
 
-from .utils import linear_probability_path, velocity_target
+from .utils import linear_probability_path
 
 
 def train_loop(
@@ -25,18 +25,20 @@ def train_loop(
         images = batch["images"].to(device)
         patch_hw = batch.get("patch_hw")
         packs = batch.get("packs")
+        orig_hw = batch.get("orig_hw")
 
-        if patch_hw is None or packs is None:
-            raise ValueError("Dataloader must supply 'patch_hw' and 'packs' for NaViT mode")
+        if patch_hw is None or packs is None or orig_hw is None:
+            raise ValueError("Dataloader must supply 'patch_hw', 'orig_hw', and 'packs' for NaViT mode")
         patch_hw = patch_hw.to(device)
+        orig_hw = orig_hw.to(device)
 
         x0 = torch.randn_like(images) * noise_std
         t = torch.rand(images.size(0), device=device)
         xt = linear_probability_path(x0, images, t)
-        target = velocity_target(x0, images)
+        target = images - x0
 
         optimizer.zero_grad(set_to_none=True)
-        pred = model(xt, t, patch_hw=patch_hw, packs=packs)
+        pred = model(xt, t, patch_hw=patch_hw, packs=packs, orig_hw=orig_hw)
         loss = loss_fn(pred, target)
         loss.backward()
         optimizer.step()
@@ -47,4 +49,3 @@ def train_loop(
             print(f"[step {step}] loss={loss.item():.6f}")
 
     return total_loss / max(count, 1)
-

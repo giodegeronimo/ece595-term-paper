@@ -176,3 +176,35 @@ def make_padding_collate(patch_size: int, pad_value: float = 0.0) -> Callable:
 
     return PaddingCollate(patch_size, pad_value)
 
+
+def make_reflow_collate(patch_size: int):
+    """
+    Collate function for reflow datasets that already contain (x0, target, shape).
+    """
+
+    def collate(batch: Sequence[Dict[str, torch.Tensor]]):
+        if not batch:
+            raise ValueError("Empty batch passed to reflow collate")
+        n = len(batch)
+        shapes = [sample["shape"] for sample in batch]
+        max_h = max(math.ceil(h / patch_size) * patch_size for h, _ in shapes)
+        max_w = max(math.ceil(w / patch_size) * patch_size for _, w in shapes)
+        x0 = torch.zeros(n, 3, max_h, max_w)
+        target = torch.zeros_like(x0)
+        patch_hw = []
+        for i, sample in enumerate(batch):
+            h, w = sample["shape"]
+            x0_tensor = sample["x0"]
+            target_tensor = sample["target"]
+            x0[i, :, :h, :w] = x0_tensor
+            target[i, :, :h, :w] = target_tensor
+            patch_hw.append((math.ceil(h / patch_size), math.ceil(w / patch_size)))
+        return {
+            "x0": x0,
+            "target": target,
+            "patch_hw": torch.tensor(patch_hw, dtype=torch.long),
+            "orig_hw": torch.tensor(shapes, dtype=torch.long),
+            "packs": [[idx] for idx in range(n)],
+        }
+
+    return collate
